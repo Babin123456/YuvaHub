@@ -290,6 +290,30 @@ export default function ShareCalendarActions({
           <Download className="h-4 w-4" aria-hidden="true" />
           Download .ics
         </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            if (!parsedDeadline) return;
+            const urlToOpen = `https://outlook.live.com/calendar/0/action/compose?${new URLSearchParams({
+              path: '/calendar/action/compose',
+              rru: 'addevent',
+              subject: title,
+              startdt: parsedDeadline.toISOString(),
+              enddt: new Date(parsedDeadline.getTime() + 60 * 60 * 1000).toISOString(),
+              body: eventDescription,
+              location,
+            }).toString()}`;
+            window.open(urlToOpen, '_blank', 'noopener,noreferrer');
+          }}
+          disabled={!hasValidDeadline}
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-gray-200 disabled:hover:bg-white disabled:hover:text-gray-700"
+          aria-label="Add deadline to Outlook Calendar"
+        >
+          <CalendarPlus className="h-4 w-4 text-sky-600" aria-hidden="true" />
+          Outlook / 365
+          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+        </button>
       </div>
 
       {!hasValidDeadline ? (
