@@ -20,15 +20,17 @@ const submitOpportunitySchema = z.object({
   contactEmail: z.string().email().optional(),
 });
 
+import { auditMiddleware } from "../middlewares/auditLogger";
+
 const router = Router();
 
 router.get("/opportunities", getOpportunities);
 router.get("/opportunities/trending", cacheMiddleware(300), getTrendingOpportunities);
 router.get("/opportunities/semantic-search", semanticSearch);
 router.get("/opportunities/latest", getLatestOpportunities);
-router.post("/opportunities", authMiddleware, validateRequest(z.object({ body: submitOpportunitySchema })), submitOpportunity);
+router.post("/opportunities", authMiddleware, validateRequest(z.object({ body: submitOpportunitySchema })), auditMiddleware("OPPORTUNITY_CREATE", "INFO", "Opportunity"), submitOpportunity);
 router.get("/opportunity/:id", cacheMiddleware(3600, (req: any) => `opportunity:${req.params.id}`), markdownNegotiation, getOpportunityById);
-router.put("/opportunity/:id", authMiddleware, adminOnly, updateOpportunity);
+router.put("/opportunity/:id", authMiddleware, adminOnly, auditMiddleware("OPPORTUNITY_UPDATE", "WARNING", "Opportunity"), updateOpportunity);
 router.post("/opportunities/:id/bookmark", authMiddleware, toggleBookmark);
 router.get("/opportunities/:id/similar", cacheMiddleware(3600, (req: any) => `opportunity:${req.params.id}:similar`), getSimilarOpportunities);
 
