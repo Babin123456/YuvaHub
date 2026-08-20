@@ -13,6 +13,7 @@ import LoadingScreen from './components/ui/LoadingScreen';
 import NotificationDropdown from './components/ui/NotificationDropdown';
 import BackToTopButton from './components/ui/BackToTopButton';
 import AccessibilityEnhancer from './components/accessibility/AccessibilityEnhancer';
+import { OfflineSyncToast } from './components/OfflineSyncToast';
 
 // Route components are lazy-loaded to reduce the initial bundle size (code splitting)
 const Dashboard = lazy(() => import('./components/tabs/Dashboard'));
@@ -721,6 +722,7 @@ function App() {
         </div>
 
         <BackToTopButton />
+        <OfflineSyncToast />
       </main>
 
     </div>
