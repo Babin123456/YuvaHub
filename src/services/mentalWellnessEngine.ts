@@ -103,4 +103,22 @@ export class StudentMentalWellnessEngine {
     }
     return null;
   }
+
+  public static async updateSessionStatus(
+    checkInId: string,
+    sessionStatus: 'PENDING' | 'SCHEDULED' | 'COMPLETED' | 'RESOLVED',
+    counselorNotes?: string
+  ): Promise<IMentalWellnessCheckIn | null> {
+    const target = inMemoryCheckIns.find(item => item.studentId === checkInId);
+    if (target) {
+      target.sessionStatus = sessionStatus;
+      if (counselorNotes) {
+        target.confidentialNotes = counselorNotes;
+      }
+      target.updatedAt = new Date();
+      return target;
+    }
+    return null;
+  }
 }
+

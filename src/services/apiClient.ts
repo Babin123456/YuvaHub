@@ -1139,3 +1139,45 @@ export async function deleteCareerGoal(goalId: string) {
   }
   return await response.json();
 }
+
+// --- Student Mental Wellness Desk ---
+
+export async function fetchMentalWellnessCheckIns(filters?: { campusName?: string; stressLevel?: string; sessionStatus?: string; search?: string }) {
+  const params = new URLSearchParams();
+  if (filters?.campusName && filters.campusName !== 'All') params.append('campusName', filters.campusName);
+  if (filters?.stressLevel && filters.stressLevel !== 'All') params.append('stressLevel', filters.stressLevel);
+  if (filters?.sessionStatus && filters.sessionStatus !== 'All') params.append('sessionStatus', filters.sessionStatus);
+  if (filters?.search) params.append('search', filters.search);
+
+  const query = params.toString() ? `?${params.toString()}` : '';
+  const response = await fetchWithRetry(`${API_BASE_URL}/campus/wellness/checkins${query}`, { method: 'GET' });
+  if (!response.ok) {
+    throw new Error("Failed to fetch mental wellness checkins");
+  }
+  return await response.json();
+}
+
+export async function createMentalWellnessCheckIn(payload: any) {
+  const response = await fetchWithRetry(`${API_BASE_URL}/campus/wellness/checkins`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || "Failed to submit mental wellness checkin");
+  }
+  return await response.json();
+}
+
+export async function updateMentalWellnessSession(id: string, sessionStatus: string, counselorNotes?: string) {
+  const response = await fetchWithRetry(`${API_BASE_URL}/campus/wellness/checkins/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ sessionStatus, counselorNotes }),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || "Failed to update wellness session");
+  }
+  return await response.json();
+}
+
