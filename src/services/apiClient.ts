@@ -1139,3 +1139,45 @@ export async function deleteCareerGoal(goalId: string) {
   }
   return await response.json();
 }
+
+// --- Campus Research IP & Patent Licensing ---
+
+export async function fetchCampusPatents(filters?: { campusName?: string; technologyDomain?: string; patentStatus?: string; search?: string }) {
+  const params = new URLSearchParams();
+  if (filters?.campusName && filters.campusName !== 'All') params.append('campusName', filters.campusName);
+  if (filters?.technologyDomain && filters.technologyDomain !== 'All') params.append('technologyDomain', filters.technologyDomain);
+  if (filters?.patentStatus && filters.patentStatus !== 'All') params.append('patentStatus', filters.patentStatus);
+  if (filters?.search) params.append('search', filters.search);
+
+  const query = params.toString() ? `?${params.toString()}` : '';
+  const response = await fetchWithRetry(`${API_BASE_URL}/campus/patents${query}`, { method: 'GET' });
+  if (!response.ok) {
+    throw new Error("Failed to fetch campus patents");
+  }
+  return await response.json();
+}
+
+export async function registerCampusPatent(payload: any) {
+  const response = await fetchWithRetry(`${API_BASE_URL}/campus/patents`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || "Failed to register patent");
+  }
+  return await response.json();
+}
+
+export async function licenseCampusPatent(id: string, commercialPartnerName: string) {
+  const response = await fetchWithRetry(`${API_BASE_URL}/campus/patents/${id}/license`, {
+    method: 'POST',
+    body: JSON.stringify({ commercialPartnerName }),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || "Failed to license patent");
+  }
+  return await response.json();
+}
+

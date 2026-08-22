@@ -93,4 +93,12 @@ export class ResearchPatentEngine {
     }
     return null;
   }
+
+  public static async licensePatent(
+    patentId: string,
+    commercialPartnerName: string
+  ): Promise<IResearchPatentIp | null> {
+    return this.executeLicensingAgreement(patentId, commercialPartnerName);
+  }
 }
+
