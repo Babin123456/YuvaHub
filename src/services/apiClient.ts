@@ -1139,3 +1139,45 @@ export async function deleteCareerGoal(goalId: string) {
   }
   return await response.json();
 }
+
+// --- Campus Alumni Endowment Portal ---
+
+export async function fetchEndowments(filters?: { campusName?: string; fundCategory?: string; grantStatus?: string; search?: string }) {
+  const params = new URLSearchParams();
+  if (filters?.campusName && filters.campusName !== 'All') params.append('campusName', filters.campusName);
+  if (filters?.fundCategory && filters.fundCategory !== 'All') params.append('fundCategory', filters.fundCategory);
+  if (filters?.grantStatus && filters.grantStatus !== 'All') params.append('grantStatus', filters.grantStatus);
+  if (filters?.search) params.append('search', filters.search);
+
+  const query = params.toString() ? `?${params.toString()}` : '';
+  const response = await fetchWithRetry(`${API_BASE_URL}/campus/endowments${query}`, { method: 'GET' });
+  if (!response.ok) {
+    throw new Error("Failed to fetch campus endowments");
+  }
+  return await response.json();
+}
+
+export async function createEndowmentFund(payload: any) {
+  const response = await fetchWithRetry(`${API_BASE_URL}/campus/endowments`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || "Failed to create endowment fund");
+  }
+  return await response.json();
+}
+
+export async function contributeToEndowmentFund(id: string, contributionAmountUsd: number, donorName?: string) {
+  const response = await fetchWithRetry(`${API_BASE_URL}/campus/endowments/${id}/contribute`, {
+    method: 'POST',
+    body: JSON.stringify({ contributionAmountUsd, donorName }),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || "Failed to contribute to endowment fund");
+  }
+  return await response.json();
+}
+

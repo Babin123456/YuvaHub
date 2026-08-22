@@ -114,4 +114,13 @@ export class AlumniEndowmentEngine {
 
     return fund;
   }
+
+  public static async contributeToEndowment(
+    fundId: string,
+    donationAmountUsd: number,
+    _donorName?: string
+  ): Promise<IAlumniEndowmentFund | null> {
+    return this.contributeToFund(fundId, donationAmountUsd);
+  }
 }
+

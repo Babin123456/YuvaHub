@@ -67,6 +67,7 @@ const ExperiencesHub = lazy(() => import('./components/tabs/ExperiencesHub'));
 const PollStudio = lazy(() => import('./components/tabs/PollStudio'));
 const WatchlistManager = lazy(() => import('./components/tabs/WatchlistManager'));
 const CareerGoalTracker = lazy(() => import('./components/tabs/CareerGoalTracker'));
+const CampusAlumniEndowmentStudioPage = lazy(() => import('./pages/CampusAlumniEndowmentStudioPage'));
 
 const LoadingFallback = () => (
   <div className="min-h-screen flex flex-col items-center justify-center bg-white gap-6">
@@ -299,6 +300,7 @@ function App() {
       items: [
         { id: 'submit', label: 'Submit Opportunity', icon: PlusCircle },
         { id: 'grant_studio', label: 'Grants & Fellowships', icon: Award },
+        { id: 'campus_endowment', label: 'Alumni Endowment Portal', icon: GraduationCap, badge: 'NEW' },
         { id: 'research_grants', label: 'Research Grant Portal', icon: BookOpen },
         { id: 'tech_ecosystem', label: 'Tech Ecosystem Studio', icon: Cpu },
         { id: 'developer_api', label: 'Developer API Portal', icon: Terminal },
@@ -350,6 +352,7 @@ function App() {
       case 'opportunity_match': return <OpportunityMatchStudio />;
       case 'tech_ecosystem': return <TechEcosystemStudio />;
       case 'hackathon_judge': return <HackathonJudgeStudio />;
+      case 'campus_endowment': return <CampusAlumniEndowmentStudioPage />;
       case 'mentorship_advisory': return <MentorshipAdvisoryStudio />;
       case 'research_grants': return <ResearchGrantPortal />;
       case 'project_showcase': return <ProjectShowcaseVault />;
